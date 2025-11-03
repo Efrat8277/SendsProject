@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SendsProject.Classes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,51 +9,63 @@ namespace SendsProject.Controllers
     [ApiController]
     public class RecipientController : ControllerBase
     {
-        public static List<Recipient> recipients = { new Recipient { RecipientId = 2, Identity = "123456789", Name = "Eli", Phone = "054789654123", Address = "hneviim" } };
+
+        private readonly IDataContext _dataContext;
+
+        public RecipientController(IDataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
         // GET: api/<RecipientController>
         [HttpGet]
         public IEnumerable<Recipient> Get()
         {
-            return recipients;
+            return _dataContext.Recipients;
         }
 
         // GET api/<RecipientController>/5
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var recipient = recipients.Find(x => x.Id == id);
+            var recipient = _dataContext.Recipients.Find(x => x.RecipientId == id);
             if (recipient != null)
             {
-                return Ok(e);
+                return Ok(recipient);
             }
             return NotFound();
         }
 
         // POST api/<RecipientController>
         [HttpPost]
-        public void Post([FromBody] Recipient value)
+        public ActionResult Post([FromBody] Recipient value)
         {
-            recipients.Add(value);
+            var recipient = _dataContext.Recipients.Find(x=>x.RecipientId == value.RecipientId);
+            if (recipient != null)
+            {
+                return Conflict();
+            }
+            _dataContext.Recipients.Add(value);
+            return Ok(value);
         }
 
         // PUT api/<RecipientController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Recipient value)
         {
-            var index = recipients.FindIndex(recipients => recipients.Id == id);
-            recipients[index].RecipientId=value.RecipientId;
-            recipients[index].Name=value.Name;
-            recipients[index].Phone=value.Phone;
-            recipients[index].Address=value.Address;
+            var index = _dataContext.Recipients.FindIndex(recipients => recipients.RecipientId == id);
+            _dataContext.Recipients[index].RecipientId=value.RecipientId;
+            _dataContext.Recipients[index].Name=value.Name;
+            _dataContext.Recipients[index].Phone=value.Phone;
+            _dataContext.Recipients[index].Address=value.Address;
         }
 
         // DELETE api/<RecipientController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var recipient = recipients.Find(x => x.Id == id);
-            recipients.Remove(recipient);
+            var recipient = _dataContext.Recipients.Find(x => x.RecipientId == id);
+            _dataContext.Recipients.Remove(recipient);
         }
     }
 }

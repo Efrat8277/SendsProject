@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SendsProject
+namespace SendsProject.Classes
 {
     public class DeliveryPerson
     {
-        [Key]
         public int DeliveryPersonId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public int WorkDays { get; set; }
-        public TimeSpan StartTime { get; set; } 
-        public TimeSpan EndTime { get; set; } 
-       
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
     }
 }

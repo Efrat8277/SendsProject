@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SendsProject.Classes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,19 +9,24 @@ namespace SendsProject.Controllers
     [ApiController]
     public class DeliveryPersonController : ControllerBase
     {
-        public static List<DeliveryPerson> delivers = { new DeliveryPerson { DeliveryPersonId = 1, Name = "yoni", Phone = "0588888888", WorkDays = "25" } };
+        private readonly IDataContext _dataContext;
+
+        public DeliveryPersonController(IDataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
         // GET: api/<DeliveryPersonController>
         [HttpGet]
         public IEnumerable<DeliveryPerson> Get()
         {
-            return delivers;
+            return _dataContext.DeliveryPeople;
         }
 
         // GET api/<DeliveryPersonController>/5
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var deliver = delivers.Find(x => x.Id == id);
+            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == id);
             if(deliver != null)
             {
                 return Ok(deliver);
@@ -30,29 +36,35 @@ namespace SendsProject.Controllers
 
         // POST api/<DeliveryPersonController>
         [HttpPost]
-        public void Post([FromBody] DeliveryPerson value)
+        public ActionResult Post([FromBody] DeliveryPerson value)
         {
-            delivers.Add(value);
+            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == value.DeliveryPersonId);
+            if (deliver != null)
+            {
+                return Conflict();
+            }
+            _dataContext.DeliveryPeople.Add(value);
+            return Ok(value);
         }
 
         // PUT api/<DeliveryPersonController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] DeliveryPerson value)
         {
-            var index = delivers.FindIndex(x => x.Id == id);
-            delivers[index].Name=value.Name;
-            delivers[index].Phone=value.Phone;
-            delivers[index].WorkDays=value.WorkDays;
-            delivers[index].StartTime=value.StartTime;
-            delivers[index].EndTime = value.EndTime;
+            var index = _dataContext.DeliveryPeople.FindIndex(x => x.DeliveryPersonId == id);
+            _dataContext.DeliveryPeople[index].Name=value.Name;
+            _dataContext.DeliveryPeople[index].Phone=value.Phone;
+            _dataContext.DeliveryPeople[index].WorkDays=value.WorkDays;
+            _dataContext.DeliveryPeople[index].StartTime=value.StartTime;
+            _dataContext.DeliveryPeople[index].EndTime = value.EndTime;
         }
 
         // DELETE api/<DeliveryPersonController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var deliver = delivers.Find(x => x.Id == id);
-            delivers.Remove(deliver);
+            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == id);
+            _dataContext.DeliveryPeople.Remove(deliver);
         }
     }
 }
