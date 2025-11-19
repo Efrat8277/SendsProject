@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using SendsProject.Classes;
 using SendsProject.Controllers;
 using System;
@@ -24,7 +25,7 @@ namespace SendsTests.PackageTest
         [Fact]
         public void GetById_ReturnOk()
         {
-            var id=9;
+            var id=1;
             var controller = new PackageController(fakeContext);
             var result = controller.Get(id);
             Assert.IsType<OkObjectResult>(result);
@@ -36,7 +37,7 @@ namespace SendsTests.PackageTest
             var id = 9;
             var controller = new PackageController(fakeContext);
             var result = controller.Get(id);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]

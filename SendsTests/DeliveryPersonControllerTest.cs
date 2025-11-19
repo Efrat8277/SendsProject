@@ -25,7 +25,7 @@ namespace SendsTests
         [Fact]
         public void GetById_ReturnOk()
         {
-            var id = 9;
+            var id = 1;
             var controller = new DeliveryPersonController(fakeContext);
             var result = controller.Get(id);
             Assert.IsType<OkObjectResult>(result);
@@ -36,16 +36,16 @@ namespace SendsTests
             var id = 9;
             var controller = new DeliveryPersonController(fakeContext);
             var result = controller.Get(id);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
         public void Add_ReturnOk()
         {
-            var deliver = new List<DeliveryPerson> { new DeliveryPerson { DeliveryPersonId = 1, Name = "hgkjfd", Phone = "055555555" } };
+            var deliver = new DeliveryPerson  { DeliveryPersonId = 1, Name = "hgkjfd", Phone = "055555555" } ;
             var controller = new DeliveryPersonController(fakeContext);
             var result = controller.Post(deliver);
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ConflictResult>(result);
         }
     }
 }

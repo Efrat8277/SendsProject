@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SendsProject.Classes
+namespace SendsProject.Core.Models.Classes
 {
     public class DeliveryPerson
     {

@@ -1,6 +1,9 @@
-﻿using SendsProject.Classes;
+﻿
 
-namespace SendsProject
+
+using SendsProject.Core.Models.Classes;
+
+namespace SendsProject.Data
 {
     public class DataContext:IDataContext
     {

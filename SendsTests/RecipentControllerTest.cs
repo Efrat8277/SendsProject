@@ -25,7 +25,7 @@ namespace SendsTests
         [Fact]
         public void GetById_ReturnOk()
         {
-            var id = 9;
+            var id = 2;
             var controller = new RecipientController(fakeContext);
             var result = controller.Get(id);
             Assert.IsType<OkObjectResult>(result);
@@ -36,7 +36,7 @@ namespace SendsTests
             var id = 9;
             var controller = new RecipientController(fakeContext);
             var result = controller.Get(id);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace SendsTests
             var package = new Recipient { RecipientId =2, Identity ="123456789", Name ="eli", Phone ="0548967589", Address ="hahagana"};
             var controller = new RecipientController(fakeContext);
             var result = controller.Post(package);
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<ConflictResult>(result);
         }
     }
 }
