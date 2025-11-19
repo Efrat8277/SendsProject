@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SendsProject.Classes;
+using SendsProject.Core.Models.Classes;
+using SendsProject.Core.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,24 +10,24 @@ namespace SendsProject.Controllers
     [ApiController]
     public class PackageController : ControllerBase
     {
-        private readonly IDataContext _dataContext;
+        private readonly IPackageService _packageService;
 
-        public PackageController(IDataContext dataContext)
+        public PackageController(IPackageService packageService)
         {
-            _dataContext = dataContext;
+            _packageService = packageService;
         }
         // GET: api/<PackageController>
         [HttpGet]
-        public IEnumerable<Package> Get()
+        public ActionResult Get()
         {
-            return _dataContext.Packages;
+             return Ok(_packageService.GetPackages());
         }
 
         // GET api/<PackageController>/5
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var package = _dataContext.Packages.Find(x => x.Id == id);
+            var package = _packageService.GetPackageById(id);
             if (package != null)
             {
                 return Ok(package);
@@ -38,12 +39,12 @@ namespace SendsProject.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] Package value)
         {
-            var p =_dataContext.Packages.Find(x => x.Id==value.Id);
+            var p =_packageService.GetPackageById(value.Id);
             if (p != null)
             {
                 return Conflict();
             }
-            _dataContext.Packages.Add(value);
+            _packageService.GetPackages().Add(value);
             return Ok(value);
 
         }
@@ -52,20 +53,20 @@ namespace SendsProject.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Package value)
         {
-            var index = _dataContext.Packages.FindIndex(x => x.Id == id);
-            _dataContext.Packages[index].Id = value.Id;
-            _dataContext.Packages[index].Weight = value.Weight;
-            _dataContext.Packages[index].SenderName = value.SenderName;
-            _dataContext.Packages[index].SendDate = value.SendDate;
-            _dataContext.Packages[index].IsSentToRecipient = value.IsSentToRecipient;
+            var index = _packageService.GetPackages().FindIndex(x => x.Id == id);
+            _packageService.GetPackages()[index].Id = value.Id;
+            _packageService.GetPackages()[index].Weight = value.Weight;
+            _packageService.GetPackages()[index].SenderName = value.SenderName;
+            _packageService.GetPackages()[index].SendDate = value.SendDate;
+            _packageService.GetPackages()[index].IsSentToRecipient = value.IsSentToRecipient;
         }
 
         // DELETE api/<PackageController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var package = _dataContext.Packages.Find(x => x.Id == id);
-            _dataContext.Packages.Remove(package);
+            var package = _packageService.GetPackages().Find(x => x.Id == id);
+            _packageService.GetPackages().Remove(package);
         }
     }
 }

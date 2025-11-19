@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SendsProject.Classes;
+using SendsProject.Core.Models.Classes;
+using SendsProject.Core.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,24 +10,24 @@ namespace SendsProject.Controllers
     [ApiController]
     public class DeliveryPersonController : ControllerBase
     {
-        private readonly IDataContext _dataContext;
+        private readonly IDeliveryPersonService _deliveryPersonService;
 
-        public DeliveryPersonController(IDataContext dataContext)
+        public DeliveryPersonController(IDeliveryPersonService deliveryPersonService)
         {
-            _dataContext = dataContext;
+            _deliveryPersonService=deliveryPersonService;
         }
         // GET: api/<DeliveryPersonController>
         [HttpGet]
-        public IEnumerable<DeliveryPerson> Get()
+        public ActionResult Get()
         {
-            return _dataContext.DeliveryPeople;
+            return Ok(_deliveryPersonService.GetDeliveryPerson());
         }
 
         // GET api/<DeliveryPersonController>/5
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == id);
+            var deliver = _deliveryPersonService.GetDeliveryPersonById(id);
             if(deliver != null)
             {
                 return Ok(deliver);
@@ -38,12 +39,12 @@ namespace SendsProject.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] DeliveryPerson value)
         {
-            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == value.DeliveryPersonId);
+            var deliver = _deliveryPersonService.GetDeliveryPersonById(value.DeliveryPersonId);
             if (deliver != null)
             {
                 return Conflict();
             }
-            _dataContext.DeliveryPeople.Add(value);
+            _deliveryPersonService.GetDeliveryPerson().Add(value);
             return Ok(value);
         }
 
@@ -51,20 +52,20 @@ namespace SendsProject.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] DeliveryPerson value)
         {
-            var index = _dataContext.DeliveryPeople.FindIndex(x => x.DeliveryPersonId == id);
-            _dataContext.DeliveryPeople[index].Name=value.Name;
-            _dataContext.DeliveryPeople[index].Phone=value.Phone;
-            _dataContext.DeliveryPeople[index].WorkDays=value.WorkDays;
-            _dataContext.DeliveryPeople[index].StartTime=value.StartTime;
-            _dataContext.DeliveryPeople[index].EndTime = value.EndTime;
+            var index = _deliveryPersonService.GetDeliveryPerson().FindIndex(x=>x.DeliveryPersonId==id);
+            _deliveryPersonService.GetDeliveryPerson()[index].Name=value.Name;
+            _deliveryPersonService.GetDeliveryPerson()[index].Phone=value.Phone;
+            _deliveryPersonService.GetDeliveryPerson()[index].WorkDays=value.WorkDays;
+            _deliveryPersonService.GetDeliveryPerson()[index].StartTime=value.StartTime;
+            _deliveryPersonService.GetDeliveryPerson()[index].EndTime = value.EndTime;
         }
 
         // DELETE api/<DeliveryPersonController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var deliver = _dataContext.DeliveryPeople.Find(x => x.DeliveryPersonId == id);
-            _dataContext.DeliveryPeople.Remove(deliver);
+            var deliver = _deliveryPersonService.GetDeliveryPerson().Find(x => x.DeliveryPersonId == id);
+            _deliveryPersonService.GetDeliveryPerson().Remove(deliver);
         }
     }
 }
