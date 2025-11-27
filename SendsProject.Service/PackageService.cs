@@ -24,5 +24,21 @@ namespace SendsProject.Service
         {
             return _packageRepository.GetPackageById(id);
         }
+
+        public Package PostPackage(Package package)
+        {
+            return _packageRepository.PostPackage(package);
+        }
+
+        public void PutPackage(Package package)
+        {
+
+            _packageRepository.PutPackage(package);
+        }
+
+        public void DeletePackage(int id)
+        {
+            _packageRepository.DeletePackage(id);
+        }
     }
 }

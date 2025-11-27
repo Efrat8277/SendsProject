@@ -44,28 +44,34 @@ namespace SendsProject.Controllers
             {
                 return Conflict();
             }
-            _deliveryPersonService.GetDeliveryPerson().Add(value);
-            return Ok(value);
+            deliver =  _deliveryPersonService.PostDeliveryPerson(value);
+            return Ok(deliver);
         }
 
         // PUT api/<DeliveryPersonController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] DeliveryPerson value)
+        public ActionResult Put(int id, [FromBody] DeliveryPerson value)
         {
             var index = _deliveryPersonService.GetDeliveryPerson().FindIndex(x=>x.DeliveryPersonId==id);
-            _deliveryPersonService.GetDeliveryPerson()[index].Name=value.Name;
-            _deliveryPersonService.GetDeliveryPerson()[index].Phone=value.Phone;
-            _deliveryPersonService.GetDeliveryPerson()[index].WorkDays=value.WorkDays;
-            _deliveryPersonService.GetDeliveryPerson()[index].StartTime=value.StartTime;
-            _deliveryPersonService.GetDeliveryPerson()[index].EndTime = value.EndTime;
+            if (index == -1)
+            {
+                return Conflict();
+            }
+            _deliveryPersonService.PutDeliveryPerson(value);
+            return Ok();
         }
 
         // DELETE api/<DeliveryPersonController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var deliver = _deliveryPersonService.GetDeliveryPerson().Find(x => x.DeliveryPersonId == id);
-            _deliveryPersonService.GetDeliveryPerson().Remove(deliver);
+            var deliver = _deliveryPersonService.GetDeliveryPersonById(id);
+            if (deliver != null)
+            {
+                return Conflict();
+            }
+            _deliveryPersonService.DeleteDeliveryPerson(id);
+            return Ok(deliver);
         }
     }
 }

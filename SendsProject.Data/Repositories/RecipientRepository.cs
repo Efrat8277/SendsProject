@@ -23,5 +23,25 @@ namespace SendsProject.Data.Repositories
         {
             return _context.Recipients.Find(r => r.RecipientId == recipientId);
         }
+
+        public Recipient PostRecipient(Recipient recipient)
+        {
+            _context.Recipients.Add(recipient);
+            return recipient;
+        }
+
+        public void PutRecipient(Recipient recipient)
+        {
+            var index= recipient.RecipientId;
+            _context.Recipients[index].Name = recipient.Name;
+            _context.Recipients[index].Address = recipient.Address;
+            _context.Recipients[index].Phone = recipient.Phone;
+        }
+
+        public void DeleteRecipient(int id)
+        {
+            var index = _context.Recipients.FindIndex(r => r.RecipientId == id);
+            _context.Recipients.RemoveAt(index);
+        }
     }
 }

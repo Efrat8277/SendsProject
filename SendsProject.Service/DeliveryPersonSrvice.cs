@@ -22,9 +22,21 @@ namespace SendsProject.Service
             return _deliveryPersonRepository.GetDeliveryPerson();
         }
 
-        public DeliveryPerson GetDeliveryPerson(int id)
+        public DeliveryPerson GetDeliveryPersonById(int id)
         {
             return _deliveryPersonRepository.GetDeliveryPersonById(id);
+        }
+        public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson)
+        {
+           return _deliveryPersonRepository.PostDeliveryPerson(deliveryPerson);
+        }
+        public void PutDeliveryPerson(DeliveryPerson deliveryPerson)
+        {
+            _deliveryPersonRepository.PutDeliveryPerson(deliveryPerson);
+        }
+        public void DeleteDeliveryPerson(int id)
+        {
+            _deliveryPersonRepository.DeleteDeliveryPerson(id);
         }
 
     }

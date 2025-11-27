@@ -46,8 +46,8 @@ namespace SendsProject.Controllers
             {
                 return Conflict();
             }
-            _recipientService.GetRecipients().Add(value);
-            return Ok(value);
+            recipient= _recipientService.PostRecipient(value);
+            return Ok(recipient);
         }
 
         // PUT api/<RecipientController>/5
@@ -63,10 +63,15 @@ namespace SendsProject.Controllers
 
         // DELETE api/<RecipientController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var recipient = _recipientService.GetRecipients().Find(x => x.RecipientId == id);
-            _recipientService.GetRecipients().Remove(recipient);
+            var recipient = _recipientService.GetRecipientById(id);
+            if (recipient != null)
+            {
+                return Conflict();
+            }
+            _recipientService.DeleteRecipient(id);
+            return Ok(recipient);
         }
     }
 }

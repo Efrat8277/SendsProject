@@ -44,29 +44,35 @@ namespace SendsProject.Controllers
             {
                 return Conflict();
             }
-            _packageService.GetPackages().Add(value);
-            return Ok(value);
+            p= _packageService.PostPackage(value);
+            return Ok(p);
 
         }
 
         // PUT api/<PackageController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Package value)
+        public ActionResult Put(int id, [FromBody] Package value)
         {
             var index = _packageService.GetPackages().FindIndex(x => x.Id == id);
-            _packageService.GetPackages()[index].Id = value.Id;
-            _packageService.GetPackages()[index].Weight = value.Weight;
-            _packageService.GetPackages()[index].SenderName = value.SenderName;
-            _packageService.GetPackages()[index].SendDate = value.SendDate;
-            _packageService.GetPackages()[index].IsSentToRecipient = value.IsSentToRecipient;
+           if (index != -1)
+            {
+                return Conflict();
+            }
+           _packageService.PutPackage(value);
+            return Ok();
         }
 
         // DELETE api/<PackageController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var package = _packageService.GetPackages().Find(x => x.Id == id);
-            _packageService.GetPackages().Remove(package);
+            var p = _packageService.GetPackageById(id);
+            if (p != null)
+            {
+                return Conflict();
+            }
+            _packageService.DeletePackage(id);
+            return Ok();
         }
     }
 }

@@ -11,5 +11,10 @@ namespace SendsProject.Core.Repositories
     {
         public List<DeliveryPerson> GetDeliveryPerson();
         public DeliveryPerson GetDeliveryPersonById(int id);
+        public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson);
+        public void PutDeliveryPerson(DeliveryPerson deliveryPerson);
+        public void DeleteDeliveryPerson(int id);
+
+
     }
 }

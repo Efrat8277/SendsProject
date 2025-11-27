@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SendsProject.Core\SendsProject.Core.csproj" />
+    <ProjectReference Include="..\SendsProject.Data\SendsProject.Data.csproj" />
+    <ProjectReference Include="..\SendsProject.Service\SendsProject.Service.csproj" />
   </ItemGroup>
 
 </Project>

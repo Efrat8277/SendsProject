@@ -25,5 +25,20 @@ namespace SendsProject.Service
         {
             return _recipientRepository.GetRecipientById(recipientId);
         }
+
+        public Recipient PostRecipient(Recipient recipient)
+        {
+            return _recipientRepository.PostRecipient(recipient);
+        }
+
+        public void PutRecipient(Recipient recipient)
+        {
+            _recipientRepository.PutRecipient(recipient);
+        }
+
+        public void DeleteRecipient(int id)
+        {
+            _recipientRepository.DeleteRecipient(id);
+        }
     }
 }

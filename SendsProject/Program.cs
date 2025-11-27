@@ -1,3 +1,9 @@
+using SendsProject.Core.Repositories;
+using SendsProject.Core.Services;
+using SendsProject.Data;
+using SendsProject.Data.Repositories;
+using SendsProject.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +15,8 @@ builder.Services.AddSwaggerGen();
 
 
 
+
+
 var policy = "policy";
 builder.Services.AddCors(options =>
 {
@@ -17,6 +25,18 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
+
+builder.Services.AddScoped<IDeliveryPersonRepository,DeliveryPersonRepository>();
+builder.Services.AddScoped<IDeliveryPersonService, DeliveryPersonSrvice>();
+
+builder.Services.AddScoped<IRecipientRepository, RecipientRepository>();
+builder.Services.AddScoped<IRecipientService, RecipientService>();
+
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
+builder.Services.AddScoped<IPackageService, PackageService>();
+
+builder.Services.AddSingleton<DataContext>();
+
 
 var app = builder.Build();
 

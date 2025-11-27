@@ -11,5 +11,8 @@ namespace SendsProject.Core.Repositories
     {
         public List<Recipient> GetRecipients();
         public Recipient GetRecipientById(int recipientId);
+        public Recipient PostRecipient(Recipient recipient);
+        public void PutRecipient(Recipient recipient);
+        public void DeleteRecipient(int id);
     }
 }

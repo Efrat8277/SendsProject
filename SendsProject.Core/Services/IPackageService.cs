@@ -11,5 +11,8 @@ namespace SendsProject.Core.Services
     {
         public List<Package> GetPackages();
         public Package GetPackageById(int id);
+        public Package PostPackage(Package package);
+        public void PutPackage(Package package);
+        public void DeletePackage(int id);
     }
 }
