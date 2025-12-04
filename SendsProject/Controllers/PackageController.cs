@@ -54,7 +54,7 @@ namespace SendsProject.Controllers
         public ActionResult Put(int id, [FromBody] Package value)
         {
             var index = _packageService.GetPackages().FindIndex(x => x.Id == id);
-           if (index != -1)
+           if (index == -1)
             {
                 return Conflict();
             }
@@ -67,7 +67,7 @@ namespace SendsProject.Controllers
         public ActionResult Delete(int id)
         {
             var p = _packageService.GetPackageById(id);
-            if (p != null)
+            if (p == null)
             {
                 return Conflict();
             }

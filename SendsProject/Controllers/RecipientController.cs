@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Services;
+using SendsProject.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,13 +53,15 @@ namespace SendsProject.Controllers
 
         // PUT api/<RecipientController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Recipient value)
+        public ActionResult Put(int id, [FromBody] Recipient value)
         {
-            var index = _recipientService.GetRecipients().FindIndex(x=>x.RecipientId==id);
-            _recipientService.GetRecipients()[index].RecipientId = value.RecipientId;
-            _recipientService.GetRecipients()[index].Name=value.Name;
-            _recipientService.GetRecipients()[index].Phone=value.Phone;
-            _recipientService.GetRecipients()[index].Address=value.Address;
+            var index = _recipientService.GetRecipients().FindIndex(x => x.RecipientId == id);
+            if (index == -1)
+            {
+                return Conflict();
+            }
+            _recipientService.PutRecipient(value);
+            return Ok();
         }
 
         // DELETE api/<RecipientController>/5
@@ -66,7 +69,7 @@ namespace SendsProject.Controllers
         public ActionResult Delete(int id)
         {
             var recipient = _recipientService.GetRecipientById(id);
-            if (recipient != null)
+            if (recipient == null)
             {
                 return Conflict();
             }

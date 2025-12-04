@@ -30,17 +30,18 @@ namespace SendsProject.Data.Repositories
         }
         public void PutDeliveryPerson(DeliveryPerson deliveryPerson)
         {
-            var index = deliveryPerson.DeliveryPersonId;
-            _context.DeliveryPeople[index].Name=deliveryPerson.Name;
-            _context.DeliveryPeople[index].Phone=deliveryPerson.Phone;
-            _context.DeliveryPeople[index].WorkDays=deliveryPerson.WorkDays;
-            _context.DeliveryPeople[index].StartTime=deliveryPerson.StartTime;
-            _context.DeliveryPeople[index].EndTime=deliveryPerson.EndTime;
+            var d=GetDeliveryPersonById(deliveryPerson.DeliveryPersonId);
+            d.WorkDays = deliveryPerson.WorkDays;
+            d.StartTime = deliveryPerson.StartTime;
+            d.EndTime = deliveryPerson.EndTime;
+            d.Name = deliveryPerson.Name;
+            d.Phone = deliveryPerson.Phone;
+            
         }
         public void DeleteDeliveryPerson(int id)
         {
-            var index = _context.DeliveryPeople.FindIndex(d => d.DeliveryPersonId==id);
-             _context.DeliveryPeople.RemoveAt(index);
+            var d = GetDeliveryPersonById(id);
+            _context.DeliveryPeople.Remove(d);
         }
     }
 }

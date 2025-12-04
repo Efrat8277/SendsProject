@@ -66,7 +66,7 @@ namespace SendsProject.Controllers
         public ActionResult Delete(int id)
         {
             var deliver = _deliveryPersonService.GetDeliveryPersonById(id);
-            if (deliver != null)
+            if (deliver == null)
             {
                 return Conflict();
             }

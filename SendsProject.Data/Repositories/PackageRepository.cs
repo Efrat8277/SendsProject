@@ -11,6 +11,10 @@ namespace SendsProject.Data.Repositories
     public class PackageRepository : IPackageRepository
     {
         private readonly DataContext _context;
+        public PackageRepository(DataContext context)
+        {
+            _context = context;
+        }
         public List<Package> GetPackages()
         {
             return _context.Packages;
@@ -27,16 +31,22 @@ namespace SendsProject.Data.Repositories
         }
         public void PutPackage(Package package)
         {
-            var index = package.Id;
-            _context.Packages[index].SenderName=package.SenderName;
-            _context.Packages[index].SendDate=package.SendDate;
-            _context.Packages[index].IsSentToRecipient=package.IsSentToRecipient;
-            _context.Packages[index].Weight=package.Weight;
+            var pack=GetPackageById(package.Id);
+            pack.SendDate = package.SendDate;
+            pack.IsSentToRecipient = package.IsSentToRecipient;
+            pack.SenderName = package.SenderName;
+            pack.Weight = package.Weight;
+
+            //var index = package.Id;
+            //_context.Packages[index].SenderName=package.SenderName;
+            //_context.Packages[index].SendDate=package.SendDate;
+            //_context.Packages[index].IsSentToRecipient=package.IsSentToRecipient;
+            //_context.Packages[index].Weight=package.Weight;
         }
         public void DeletePackage(int id)
         {
-            var index = _context.Packages.FindIndex(d => d.Id == id);
-            _context.Packages.RemoveAt(index);
+            var package=GetPackageById(id);
+            _context.Packages.Remove(package);
         }
     }
 }

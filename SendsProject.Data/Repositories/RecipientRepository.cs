@@ -32,16 +32,16 @@ namespace SendsProject.Data.Repositories
 
         public void PutRecipient(Recipient recipient)
         {
-            var index= recipient.RecipientId;
-            _context.Recipients[index].Name = recipient.Name;
-            _context.Recipients[index].Address = recipient.Address;
-            _context.Recipients[index].Phone = recipient.Phone;
+            var rec=GetRecipientById(recipient.RecipientId);
+            rec.Address = recipient.Address;
+            rec.Phone = recipient.Phone;
+            rec.Name = recipient.Name; 
         }
 
         public void DeleteRecipient(int id)
         {
-            var index = _context.Recipients.FindIndex(r => r.RecipientId == id);
-            _context.Recipients.RemoveAt(index);
+            var recipient = GetRecipientById(id);
+            _context.Recipients.Remove(recipient);
         }
     }
 }

@@ -16,7 +16,6 @@ builder.Services.AddSwaggerGen();
 
 
 
-
 var policy = "policy";
 builder.Services.AddCors(options =>
 {
