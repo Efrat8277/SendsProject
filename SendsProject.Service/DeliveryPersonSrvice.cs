@@ -17,27 +17,36 @@ namespace SendsProject.Service
             _deliveryPersonRepository = deliveryPersonRepository;
         }
 
-        public List<DeliveryPerson> GetDeliveryPerson()
+        public async Task<List<DeliveryPerson>> GetDeliveryPersonAsync()
         {
-            return _deliveryPersonRepository.GetDeliveryPerson();
+            return await _deliveryPersonRepository.GetDeliveryPersonAsync();
         }
 
-        public DeliveryPerson GetDeliveryPersonById(int id)
+        public async Task<DeliveryPerson> GetDeliveryPersonByIdAsync(int id)
         {
-            return _deliveryPersonRepository.GetDeliveryPersonById(id);
+            return await _deliveryPersonRepository.GetDeliveryPersonByIdAsync(id);
         }
-        public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson)
+        public async Task<DeliveryPerson> PostDeliveryPersonAsync(DeliveryPerson deliveryPerson)
         {
-           return _deliveryPersonRepository.PostDeliveryPerson(deliveryPerson);
+           var d=  _deliveryPersonRepository.PostDeliveryPerson(deliveryPerson);
+           await _deliveryPersonRepository.SaveAsync();
+            return d;
+
+
         }
-        public void PutDeliveryPerson(DeliveryPerson deliveryPerson)
+        public async Task PutDeliveryPersonAsync(DeliveryPerson deliveryPerson)
         {
-            _deliveryPersonRepository.PutDeliveryPerson(deliveryPerson);
+            await _deliveryPersonRepository.PutDeliveryPersonAsync(deliveryPerson);
+            await  _deliveryPersonRepository.SaveAsync();
+
         }
-        public void DeleteDeliveryPerson(int id)
+        public async Task DeleteDeliveryPersonAsync(int id)
         {
-            _deliveryPersonRepository.DeleteDeliveryPerson(id);
+           await _deliveryPersonRepository.DeleteDeliveryPersonAsync(id);
+           await _deliveryPersonRepository.SaveAsync();
+
         }
+
 
     }
 }

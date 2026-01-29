@@ -1,14 +1,22 @@
+using SendsProject;
+using SendsProject.Core;
 using SendsProject.Core.Repositories;
 using SendsProject.Core.Services;
 using SendsProject.Data;
 using SendsProject.Data.Repositories;
 using SendsProject.Service;
+using System.Data;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,7 +42,9 @@ builder.Services.AddScoped<IRecipientService, RecipientService>();
 builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 builder.Services.AddScoped<IPackageService, PackageService>();
 
-builder.Services.AddSingleton<DataContext>();
+builder.Services.AddDbContext<DataContext>();
+builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(MappingPostModels));
+
 
 
 var app = builder.Build();

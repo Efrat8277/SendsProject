@@ -1,18 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SendsProject.Core.Models.Classes
+﻿namespace SendsProject.Models
 {
-    public class Package
+    public class PackagePostModel
     {
         public int Id { get; set; }
         public double Weight { get; set; }
         public string SenderName { get; set; } // שם שולח
         public DateTime SendDate { get; set; } // תאריך שליחה
         public bool IsSentToRecipient { get; set; } // חבילה נשלחה לנמען
-        public int DeliveryPersonId { get; set; }
-        public int RecipientId { get; set; }
-        public DeliveryPerson DeliveryPerson { get; set; }
-        public Recipient Recipient { get; set; }
+
+        public int DeliveryPersonId {  get; set; }
+        public int RcipientId {  get; set; }
 
     }
 }

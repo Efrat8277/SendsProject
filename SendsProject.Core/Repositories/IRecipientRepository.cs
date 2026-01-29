@@ -9,10 +9,12 @@ namespace SendsProject.Core.Repositories
 {
     public interface IRecipientRepository
     {
-        public List<Recipient> GetRecipients();
-        public Recipient GetRecipientById(int recipientId);
+        public Task<List<Recipient>> GetRecipientsAsync();
+        public Task<Recipient> GetRecipientByIdAsync(int recipientId);
         public Recipient PostRecipient(Recipient recipient);
-        public void PutRecipient(Recipient recipient);
-        public void DeleteRecipient(int id);
+        public Task PutRecipientAsync(Recipient recipient);
+        public Task DeleteRecipientAsync(int id);
+        public Task SaveAsync();
+
     }
 }

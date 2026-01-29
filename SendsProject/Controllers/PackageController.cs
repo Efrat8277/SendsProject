@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SendsProject.Core.DTO;
 using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Services;
+using SendsProject.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,67 +14,74 @@ namespace SendsProject.Controllers
     public class PackageController : ControllerBase
     {
         private readonly IPackageService _packageService;
+        private readonly IMapper _mapper;
 
-        public PackageController(IPackageService packageService)
+
+        public PackageController(IPackageService packageService,IMapper mapper)
         {
             _packageService = packageService;
+            _mapper = mapper;
         }
         // GET: api/<PackageController>
         [HttpGet]
-        public ActionResult Get()
+        public Task<ActionResult> Get()
         {
-             return Ok(_packageService.GetPackages());
+            var package = await _packageService.GetPackagesAsync();
+             return Ok(_mapper.Map<List<PackageDTO>>(package));
+            
         }
 
         // GET api/<PackageController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var package = _packageService.GetPackageById(id);
+            var package = await _packageService.GetPackageByIdAsync(id);
             if (package != null)
             {
-                return Ok(package);
+                var p = _mapper.Map<PackageDTO>(package);
+                return Ok(p);
             }
             return NotFound();
         }
 
         // POST api/<PackageController>
         [HttpPost]
-        public ActionResult Post([FromBody] Package value)
+        public async Task<ActionResult> Post([FromBody] PackagePostModel value)
         {
-            var p =_packageService.GetPackageById(value.Id);
+            var p = await _packageService.GetPackageByIdAsync(value.Id);
             if (p != null)
             {
                 return Conflict();
             }
-            p= _packageService.PostPackage(value);
-            return Ok(p);
+            var package = _mapper.Map<Package>(value);
+           var pack = _packageService.PostPackageAsync(package);
+            return Ok(pack);
 
         }
 
         // PUT api/<PackageController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Package value)
+        public async Task<ActionResult> Put(int id, [FromBody] Package value)
         {
-            var index = _packageService.GetPackages().FindIndex(x => x.Id == id);
-           if (index == -1)
+            var index = await _packageService.GetPackageByIdAsync(id);
+           if (index == null)
             {
                 return Conflict();
             }
-           _packageService.PutPackage(value);
+          await _packageService.PutPackageAsync(value);
             return Ok();
         }
 
         // DELETE api/<PackageController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var p = _packageService.GetPackageById(id);
+            var p = await _packageService.GetPackageByIdAsync(id);
             if (p == null)
             {
                 return Conflict();
             }
-            _packageService.DeletePackage(id);
+           await _packageService.DeletePackageAsync(id);
             return Ok();
         }
     }

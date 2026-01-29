@@ -1,4 +1,5 @@
-﻿using SendsProject.Core.Models.Classes;
+﻿using Microsoft.EntityFrameworkCore;
+using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,13 @@ namespace SendsProject.Data.Repositories
         {
             _context = context;
         }
-        public List<Recipient> GetRecipients()
+        public async Task<List<Recipient>> GetRecipientsAsync()
         {
-            return _context.Recipients;
+            return await _context.Recipients.Include(r=>r.Packages).ThenInclude(p=>p.DeliveryPerson).ToListAsync();
         }
-        public Recipient GetRecipientById(int recipientId)
+        public async Task<Recipient> GetRecipientByIdAsync(int recipientId)
         {
-            return _context.Recipients.Find(r => r.RecipientId == recipientId);
+            return await _context.Recipients.FirstOrDefaultAsync(r => r.RecipientId == recipientId);
         }
 
         public Recipient PostRecipient(Recipient recipient)
@@ -30,18 +31,22 @@ namespace SendsProject.Data.Repositories
             return recipient;
         }
 
-        public void PutRecipient(Recipient recipient)
+        public async Task PutRecipientAsync(Recipient recipient)
         {
-            var rec=GetRecipientById(recipient.RecipientId);
+            var rec= await GetRecipientByIdAsync(recipient.RecipientId);
             rec.Address = recipient.Address;
             rec.Phone = recipient.Phone;
             rec.Name = recipient.Name; 
         }
 
-        public void DeleteRecipient(int id)
+        public async Task DeleteRecipientAsync(int id)
         {
-            var recipient = GetRecipientById(id);
+            var recipient = await GetRecipientByIdAsync(id);
             _context.Recipients.Remove(recipient);
+        }
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

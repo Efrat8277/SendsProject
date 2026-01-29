@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SendsProject.Core.Models.Classes
+namespace SendsProject.Core.DTO
 {
-    public class Package
+    public class PackageDTO
     {
         public int Id { get; set; }
         public double Weight { get; set; }
@@ -11,8 +15,5 @@ namespace SendsProject.Core.Models.Classes
         public bool IsSentToRecipient { get; set; } // חבילה נשלחה לנמען
         public int DeliveryPersonId { get; set; }
         public int RecipientId { get; set; }
-        public DeliveryPerson DeliveryPerson { get; set; }
-        public Recipient Recipient { get; set; }
-
     }
 }

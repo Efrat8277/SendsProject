@@ -9,10 +9,10 @@ namespace SendsProject.Core.Services
 {
     public interface IRecipientService
     {
-        public List<Recipient> GetRecipients();
-        public Recipient GetRecipientById(int recipientId);
-        public Recipient PostRecipient(Recipient recipient);
-        public void PutRecipient(Recipient recipient);
-        public void DeleteRecipient(int id);
+        public Task<List<Recipient>> GetRecipientsAsync();
+        public Task<Recipient> GetRecipientByIdAsync(int recipientId);
+        public Task<Recipient> PostRecipientAsync(Recipient recipient);
+        public Task PutRecipientAsync(Recipient recipient);
+        public Task DeleteRecipientAsync(int id);
     }
 }

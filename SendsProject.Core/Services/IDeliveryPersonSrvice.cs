@@ -9,12 +9,10 @@ namespace SendsProject.Core.Services
 {
     public interface IDeliveryPersonService
     {
-        public List<DeliveryPerson> GetDeliveryPerson();
-        public DeliveryPerson GetDeliveryPersonById(int id);
-        public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson);
-        public void PutDeliveryPerson(DeliveryPerson deliveryPerson);
-        public void DeleteDeliveryPerson(int id);
-
-
+        public Task<List<DeliveryPerson>> GetDeliveryPersonAsync();
+        public Task<DeliveryPerson> GetDeliveryPersonByIdAsync(int id);
+        public Task<DeliveryPerson> PostDeliveryPersonAsync(DeliveryPerson deliveryPerson);
+        public Task PutDeliveryPersonAsync(DeliveryPerson deliveryPerson);
+        public Task DeleteDeliveryPersonAsync(int id);
     }
 }

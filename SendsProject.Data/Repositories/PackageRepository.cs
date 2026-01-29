@@ -1,4 +1,5 @@
-﻿using SendsProject.Core.Models.Classes;
+﻿using Microsoft.EntityFrameworkCore;
+using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,13 @@ namespace SendsProject.Data.Repositories
         {
             _context = context;
         }
-        public List<Package> GetPackages()
+        public async Task<List<Package>> GetPackagesAsync()
         {
-            return _context.Packages;
+            return await _context.Packages.Include(p => p.Recipient).ToListAsync();
         }
-        public Package GetPackageById(int id)
+        public async Task<Package> GetPackageByIdAsync(int id)
         {
-            return _context.Packages.Find(p => p.Id == id);
+            return await _context.Packages.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public Package PostPackage(Package package)
@@ -29,9 +30,9 @@ namespace SendsProject.Data.Repositories
             _context.Packages.Add(package);
             return package;
         }
-        public void PutPackage(Package package)
+        public async Task PutPackageAsync(Package package)
         {
-            var pack=GetPackageById(package.Id);
+            var pack=await GetPackageByIdAsync(package.Id);
             pack.SendDate = package.SendDate;
             pack.IsSentToRecipient = package.IsSentToRecipient;
             pack.SenderName = package.SenderName;
@@ -43,10 +44,14 @@ namespace SendsProject.Data.Repositories
             //_context.Packages[index].IsSentToRecipient=package.IsSentToRecipient;
             //_context.Packages[index].Weight=package.Weight;
         }
-        public void DeletePackage(int id)
+        public async Task DeletePackageAsync(int id)
         {
-            var package=GetPackageById(id);
+            var package= await GetPackageByIdAsync(id);
             _context.Packages.Remove(package);
+        }
+         public async Task SaveAsync()
+        {
+           await _context.SaveChangesAsync();
         }
     }
 }

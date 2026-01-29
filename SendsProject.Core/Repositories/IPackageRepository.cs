@@ -9,11 +9,13 @@ namespace SendsProject.Core.Repositories
 {
     public interface IPackageRepository
     {
-        public List<Package> GetPackages();
-        public Package GetPackageById(int id);
+        public Task<List<Package>> GetPackagesAsync();
+        public Task<Package> GetPackageByIdAsync(int id);
         public Package PostPackage(Package package);
-        public void PutPackage(Package package);
-        public void DeletePackage(int id);
+        public Task PutPackageAsync(Package package);
+        public Task DeletePackageAsync(int id);
+        public Task SaveAsync();
+
 
     }
 }

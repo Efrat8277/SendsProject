@@ -9,12 +9,13 @@ namespace SendsProject.Core.Repositories
 {
     public interface IDeliveryPersonRepository
     {
-        public List<DeliveryPerson> GetDeliveryPerson();
-        public DeliveryPerson GetDeliveryPersonById(int id);
+        public Task<List<DeliveryPerson>> GetDeliveryPersonAsync();
+        public Task<DeliveryPerson> GetDeliveryPersonByIdAsync(int id);
         public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson);
-        public void PutDeliveryPerson(DeliveryPerson deliveryPerson);
-        public void DeleteDeliveryPerson(int id);
+        public Task PutDeliveryPersonAsync(DeliveryPerson deliveryPerson);
+        public Task DeleteDeliveryPersonAsync(int id);
 
+        public Task SaveAsync();
 
     }
 }

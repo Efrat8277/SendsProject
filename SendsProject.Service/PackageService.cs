@@ -16,29 +16,37 @@ namespace SendsProject.Service
         {
             _packageRepository = packageRepository;
         }
-        public List<Package> GetPackages()
+        public async Task<List<Package>> GetPackagesAsync()
         {
-            return _packageRepository.GetPackages();
+            return await _packageRepository.GetPackagesAsync();
         }
-        public Package GetPackageById(int id)
+        public async Task<Package> GetPackageByIdAsync(int id)
         {
-            return _packageRepository.GetPackageById(id);
-        }
-
-        public Package PostPackage(Package package)
-        {
-            return _packageRepository.PostPackage(package);
+            return await _packageRepository.GetPackageByIdAsync(id);
         }
 
-        public void PutPackage(Package package)
+        public async Task<Package> PostPackageAsync(Package package)
         {
+           await _packageRepository.SaveAsync();
 
-            _packageRepository.PutPackage(package);
+            var p= _packageRepository.PostPackage(package);
+            return p;
         }
 
-        public void DeletePackage(int id)
+        public async Task PutPackageAsync(Package package)
         {
-            _packageRepository.DeletePackage(id);
+
+           await _packageRepository.PutPackageAsync(package);
+           await _packageRepository.SaveAsync();
+
         }
+
+        public async Task DeletePackageAsync(int id)
+        {
+           await _packageRepository.DeletePackageAsync(id);
+           await _packageRepository.SaveAsync();
+
+        }
+
     }
 }

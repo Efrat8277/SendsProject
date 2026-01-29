@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SendsProject.Core.Models.Classes
+namespace SendsProject.Core.DTO
 {
-    public class DeliveryPerson
+    public class DeliveryPersonDTO
     {
         public int DeliveryPersonId { get; set; }
         public string Name { get; set; }
@@ -10,8 +14,7 @@ namespace SendsProject.Core.Models.Classes
         public int WorkDays { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        
-        public List<Package> Packages { get; set; }
+        public int PackageId { get; set; }
 
     }
 }

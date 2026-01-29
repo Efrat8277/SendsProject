@@ -1,23 +1,23 @@
 ﻿
 
 
+using Microsoft.EntityFrameworkCore;
 using SendsProject.Core.Models.Classes;
 
 namespace SendsProject.Data
 {
-    public class DataContext:IDataContext
+    public class DataContext : DbContext
     {
-        public List<Package> Packages { get; set; }
-        public List<Recipient> Recipients { get; set; }
-        public List<DeliveryPerson> DeliveryPeople { get; set; }
+        public DbSet<Package> Packages { get; set; }
+        public DbSet<Recipient> Recipients { get; set; }
+        public DbSet<DeliveryPerson> DeliveryPeople { get; set; }
 
-
-        public DataContext() 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            Packages= new List<Package>() { new Package { Id = 1, Weight = 3.5, SenderName = "shimshon", SendDate = new DateTime(), IsSentToRecipient = false } };
-            Recipients = new List<Recipient>() { new Recipient { RecipientId = 2, Identity = "789654123", Name = "lol", Phone = "0512369874", Address = "joi" } };
-            DeliveryPeople = new List<DeliveryPerson> { new DeliveryPerson { DeliveryPersonId = 1, Name = "hgkjfd", Phone = "055555555" } };
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=DeliveryCompany_db");
+        }
 
     }
+
 }
-}
+

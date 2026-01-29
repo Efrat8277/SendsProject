@@ -17,28 +17,36 @@ namespace SendsProject.Service
             _recipientRepository = recipientRepository;
         }
 
-        public List<Recipient> GetRecipients()
+        public async Task<List<Recipient>> GetRecipientsAsync()
         {
-            return _recipientRepository.GetRecipients();
+            return await _recipientRepository.GetRecipientsAsync();
         }
-        public Recipient GetRecipientById(int recipientId)
+        public async Task<Recipient> GetRecipientByIdAsync(int recipientId)
         {
-            return _recipientRepository.GetRecipientById(recipientId);
-        }
-
-        public Recipient PostRecipient(Recipient recipient)
-        {
-            return _recipientRepository.PostRecipient(recipient);
+            return await _recipientRepository.GetRecipientByIdAsync(recipientId);
         }
 
-        public void PutRecipient(Recipient recipient)
+        public async Task<Recipient> PostRecipientAsync(Recipient recipient)
         {
-            _recipientRepository.PutRecipient(recipient);
+           await _recipientRepository.SaveAsync();
+
+            var r= _recipientRepository.PostRecipient(recipient);
+            return r;
         }
 
-        public void DeleteRecipient(int id)
+        public async Task PutRecipientAsync(Recipient recipient)
         {
-            _recipientRepository.DeleteRecipient(id);
+           await _recipientRepository.PutRecipientAsync(recipient);
+           await _recipientRepository.SaveAsync();
+
         }
+
+        public async Task DeleteRecipientAsync(int id)
+        {
+           await _recipientRepository.DeleteRecipientAsync(id);
+           await _recipientRepository.SaveAsync();
+
+        }
+
     }
 }

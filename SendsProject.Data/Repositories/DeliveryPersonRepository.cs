@@ -1,4 +1,5 @@
-﻿using SendsProject.Core.Models.Classes;
+﻿using Microsoft.EntityFrameworkCore;
+using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,33 +16,38 @@ namespace SendsProject.Data.Repositories
         {
             _context = context;
         }
-        public List<DeliveryPerson> GetDeliveryPerson()
+        public async Task<List<DeliveryPerson>> GetDeliveryPersonAsync()
         {
-            return _context.DeliveryPeople;
+            return await _context.DeliveryPeople.Include(d => d.Packages).ToListAsync();
         }
-        public DeliveryPerson GetDeliveryPersonById(int id)
+        public async Task<DeliveryPerson> GetDeliveryPersonByIdAsync(int id)
         {
-            return _context.DeliveryPeople.Find(d => d.DeliveryPersonId == id);
+            return await _context.DeliveryPeople.FirstOrDefaultAsync(d => d.DeliveryPersonId == id);
         }
         public DeliveryPerson PostDeliveryPerson(DeliveryPerson deliveryPerson)
         {
-             _context.DeliveryPeople.Add(deliveryPerson);
+            _context.DeliveryPeople.Add(deliveryPerson);
             return deliveryPerson;
         }
-        public void PutDeliveryPerson(DeliveryPerson deliveryPerson)
+        public async Task PutDeliveryPersonAsync(DeliveryPerson deliveryPerson)
         {
-            var d=GetDeliveryPersonById(deliveryPerson.DeliveryPersonId);
+            var d = await GetDeliveryPersonByIdAsync(deliveryPerson.DeliveryPersonId);
             d.WorkDays = deliveryPerson.WorkDays;
             d.StartTime = deliveryPerson.StartTime;
             d.EndTime = deliveryPerson.EndTime;
             d.Name = deliveryPerson.Name;
             d.Phone = deliveryPerson.Phone;
-            
+
         }
-        public void DeleteDeliveryPerson(int id)
+        public async Task DeleteDeliveryPersonAsync(int id)
         {
-            var d = GetDeliveryPersonById(id);
+            var d = await GetDeliveryPersonByIdAsync(id);
             _context.DeliveryPeople.Remove(d);
+        }
+
+        public async Task SaveAsync()
+        {
+           await _context.SaveChangesAsync();
         }
     }
 }

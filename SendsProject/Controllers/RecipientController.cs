@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using SendsProject.Core.DTO;
 using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Services;
+using SendsProject.Models;
 using SendsProject.Service;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,67 +16,72 @@ namespace SendsProject.Controllers
     {
 
         private readonly IRecipientService _recipientService;
+        private readonly IMapper _mapper;
 
-        public RecipientController(IRecipientService recipientService)
+        public RecipientController(IRecipientService recipientService,IMapper mapper)
         {
             _recipientService = recipientService;
+            _mapper = mapper;
         }
 
         // GET: api/<RecipientController>
         [HttpGet]
-        public ActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            return Ok(_recipientService.GetRecipients());
+            var recipients = await _recipientService.GetRecipientsAsync();
+            return Ok(_mapper.Map<List<RecipientDTO>>(recipients));
         }
 
         // GET api/<RecipientController>/5
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var recipient = _recipientService.GetRecipientById(id);
+            var recipient = await _recipientService.GetRecipientByIdAsync(id);
             if (recipient != null)
             {
-                return Ok(recipient);
+                var rec = _mapper.Map<RecipientDTO>(recipient);
+                return Ok(rec);
             }
             return NotFound();
         }
 
         // POST api/<RecipientController>
         [HttpPost]
-        public ActionResult Post([FromBody] Recipient value)
+        public async Task<ActionResult> Post([FromBody] RecipientPostModel value)
         {
-            var recipient = _recipientService.GetRecipientById(value.RecipientId);
+            var recipient = await _recipientService.GetRecipientByIdAsync(value.RecipientId);
             if (recipient != null)
             {
                 return Conflict();
             }
-            recipient= _recipientService.PostRecipient(value);
-            return Ok(recipient);
+            var recipient1 = _mapper.Map<Recipient>(value);
+            var rec=await _recipientService.PostRecipientAsync(recipient1);
+            return Ok(rec);
         }
 
         // PUT api/<RecipientController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Recipient value)
+        public async Task<ActionResult> Put(int id, [FromBody] Recipient value)
         {
-            var index = _recipientService.GetRecipients().FindIndex(x => x.RecipientId == id);
-            if (index == -1)
+            var index = await _recipientService.GetRecipientByIdAsync(id);
+            if (index == null)
             {
                 return Conflict();
             }
-            _recipientService.PutRecipient(value);
+            await _recipientService.PutRecipientAsync(value);
             return Ok();
         }
 
         // DELETE api/<RecipientController>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var recipient = _recipientService.GetRecipientById(id);
+            var recipient =await _recipientService.GetRecipientByIdAsync(id);
             if (recipient == null)
             {
                 return Conflict();
             }
-            _recipientService.DeleteRecipient(id);
+           await _recipientService.DeleteRecipientAsync(id);
             return Ok(recipient);
         }
     }

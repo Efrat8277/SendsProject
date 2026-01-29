@@ -9,10 +9,10 @@ namespace SendsProject.Core.Services
 {
     public interface IPackageService
     {
-        public List<Package> GetPackages();
-        public Package GetPackageById(int id);
-        public Package PostPackage(Package package);
-        public void PutPackage(Package package);
-        public void DeletePackage(int id);
+        public Task<List<Package>> GetPackagesAsync();
+        public Task<Package> GetPackageByIdAsync(int id);
+        public Task<Package> PostPackageAsync(Package package);
+        public Task PutPackageAsync(Package package);
+        public Task DeletePackageAsync(int id);
     }
 }
