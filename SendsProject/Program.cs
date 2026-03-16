@@ -61,6 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseShabbatMiddleware();
+
 app.MapControllers();
 
 app.UseCors(policy);

@@ -24,7 +24,7 @@ namespace SendsProject.Controllers
         }
         // GET: api/<PackageController>
         [HttpGet]
-        public Task<ActionResult> Get()
+        public async Task<ActionResult> Get()
         {
             var package = await _packageService.GetPackagesAsync();
              return Ok(_mapper.Map<List<PackageDTO>>(package));

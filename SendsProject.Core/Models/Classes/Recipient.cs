@@ -12,5 +12,8 @@ namespace SendsProject.Core.Models.Classes
 
         public List<Package> Packages { get; set; }
 
+        public int UserId { get; set; }
+        public User User { get; set; }
+
     }
 }
