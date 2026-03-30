@@ -28,9 +28,10 @@ namespace SendsProject.Service
 
         public async Task<Recipient> PostRecipientAsync(Recipient recipient)
         {
-           await _recipientRepository.SaveAsync();
+            var r = _recipientRepository.PostRecipient(recipient);
+            await _recipientRepository.SaveAsync();
 
-            var r= _recipientRepository.PostRecipient(recipient);
+           
             return r;
         }
 
@@ -43,7 +44,14 @@ namespace SendsProject.Service
 
         public async Task DeleteRecipientAsync(int id)
         {
-           await _recipientRepository.DeleteRecipientAsync(id);
+            var recipient = await _recipientRepository.GetRecipientByIdAsync(id);
+            if (recipient == null) return;
+            if (recipient.Packages != null && recipient.Packages.Any())
+            {
+                // זריקת שגיאה שתחזור ל-React כ-400 Bad Request עם הודעה ברורה
+                throw new InvalidOperationException("לא ניתן למחוק נמען שיש לו חבילות במערכת.");
+            }
+            await _recipientRepository.DeleteRecipientAsync(id);
            await _recipientRepository.SaveAsync();
 
         }

@@ -1,91 +1,144 @@
 /**
  * src/pages/LoginPage.jsx
  * ========================
- * דף כניסה — מתחבר ל: POST /api/auth
- *
- * מושגים חדשים בקובץ הזה:
- *   - useState    — שמירת ערכי טופס
- *   - useNavigate — מעבר דף לאחר login מוצלח
- *   - useAuth     — שמירת הטוקן ב-Context
+ * דף כניסה מעוצב ומודרני - SwiftDrop
  */
- 
+
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
-import {useAuth} from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext";
+
+// ייבוא אייקונים מ-react-icons
+import { FiUser, FiLock, FiLogIn, FiAlertCircle, FiTruck } from "react-icons/fi";
+
 import "../styles/login-page.css";
 
+export default function LoginPage() {
+  // --- לוגיקה מקורית (לא שונתה) ---
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-export default function LoginPage(){
-
-    //ערכי שדות הטופס
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-
-    //הודעת שגיאה אם ה- Login נכשל
-    const [error, setError] = useState("");
-
-    //מניעת לחיצה כפולה בזמן בקשה
-    const [loading, setLoading] = useState(false)
-
-    const {login} = useAuth()      //פונקצית Login- מה-Context
-    const navigate = useNavigate() //מעבר לדף אחר
-
-    async function  handleSubmit(e) {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        try{
-            //קריאה ל: POST /api/auth
-            const data = await authApi.login(userName, password);
-            console.log("תגובה מהשרת:", data)
-              console.log("Token:", data.token);    // מה הטוקן בדיוק
-
-            //data = {Token: "eyjhbGci...."}
-            login(data.token);
-
-            //מעבר לדף הראשי לאחר כניסה
-            navigate("/");
-        }catch (err){
-            setError("שם משתמש או סיסמא שגויים")
-        }finally{
-            setLoading(false)
-        }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const data = await authApi.login(userName, password);
+      console.log("תגובה מהשרת:", data);
+      console.log("Token:", data.token);
+      login(data.token);
+      navigate("/");
+    } catch (err) {
+      setError("שם משתמש או סיסמה שגויים");
+    } finally {
+      setLoading(false);
     }
-return (
-  <div className="login-page">
-    <div className="card">
-      <h2 className="title">כניסה למערכת</h2>
+  }
+  // --- סוף לוגיקה מקורית ---
 
-      <form onSubmit={handleSubmit} className="form">
-        <label className="label">שם משתמש</label>
-        <input
-          className="input"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="הכנס שם משתמש"
-          required
-        />
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        {/* כותרת ולוגו מעוצבים */}
+        <div className="login-header">
+          <div className="login-logo-icon">
+            <FiTruck />
+          </div>
+          <h2 className="login-title">SwiftDrop</h2>
+          <p className="login-subtitle">ניהול משלוחים חכם ומהיר</p>
+        </div>
 
-        <label className="label">סיסמא</label>
-        <input
-          className="input"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="הכנס סיסמא"
-          required
-        />
+        {/* טופס כניסה */}
+        <form onSubmit={handleSubmit} className="login-form">
+          
+          {/* שדה שם משתמש */}
+          <div className="input-container">
+            <label className="input-label">שם משתמש</label>
+            <div className="input-wrapper">
+              <input
+                className="login-input"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="הכניסי את שם המשתמש שלך"
+                required
+                autoComplete="username"
+              />
+              <FiUser className="input-icon" />
+            </div>
+          </div>
 
-        {error && <p className="error">{error}</p>}
+          {/* שדה סיסמה */}
+          <div className="input-container">
+            <label className="input-label">סיסמה</label>
+            <div className="input-wrapper">
+              <input
+                className="login-input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="הכניסי את הסיסמה שלך"
+                required
+                autoComplete="current-password"
+              />
+              <FiLock className="input-icon" />
+            </div>
+          </div>
 
-        <button className="button" type="submit" disabled={loading}>
-          {loading ? "מתחבר..." : "כניסה"}
-        </button>
-      </form>
+          {/* הצגת שגיאה מעוצבת עם אנימציה */}
+          {error && (
+            <div className="login-error-msg">
+              <FiAlertCircle size={18} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* כפתור כניסה עם מצב טעינה */}
+          <button className="login-button" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <CircularProgress size={20} />
+                <span>מתחבר...</span>
+              </>
+            ) : (
+              <>
+                <FiLogIn size={18} />
+                <span>כניסה למערכת</span>
+              </>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
+// קומפוננטת טעינה קטנה עבור הכפתור (Inline למניעת ייבוא נוסף)
+function CircularProgress({ size }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 50 50"
+      style={{ animation: 'rotate 1s linear infinite' }}
+    >
+      <circle
+        cx="25"
+        cy="25"
+        r="20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="5"
+        strokeDasharray="90, 150"
+        strokeLinecap="round"
+      />
+      <style>{`
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+      `}</style>
+    </svg>
+  );
+}

@@ -1,86 +1,60 @@
-/**
- * src/App.jsx
- * ============
- * נקודת הכניסה של האפליקציה.
- * מגדיר:
- *   1. את ה-AuthProvider שעוטף הכל
- *   2. את ה-Router — מפת הדפים
- *   3. הגנה על דפים שדורשים התחברות
- */
- 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import LoginPage from "./pages/LoginPage";
-import DeliveryPersonsPage from "./pages/DeliveryPersonsPage";
-import PackagesPage from "./pages/PackagesPage";
-import RecipientsPage from "./pages/RecipientsPage";
-import Navbar from "./components/Navbar";
- 
-// ─────────────────────────────────────────────
-// ProtectedRoute — שומר על דפים שדורשים login
-//
-// איך זה עובד:
-//   אם המשתמש מחובר → מציג את הדף המבוקש (children)
-//   אם לא מחובר    → מפנה אוטומטית לדף ה-Login
-// ─────────────────────────────────────────────
-function ProtectedRoute({ children }) {
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './pages/LoginPage';
+import DeliveryPersonsPage from './pages/DeliveryPersonsPage';
+import PackagesPage from './pages/PackagesPage';
+import RecipientsPage from './pages/RecipientsPage';
+import Navbar from './components/Navbar';
+
+const theme = createTheme({
+  direction: 'rtl',
+  typography: { fontFamily: '"Heebo", sans-serif' },
+  palette: {
+    primary: { main: '#1D9E75' },
+    background: { default: '#F4F7F6' },
+  },
+});
+
+const PrivateRoute = ({ children }) => {
   const { isLoggedIn } = useAuth();
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
-}
- 
-// ─────────────────────────────────────────────
-// AppRoutes — מופרד מ-App כדי שיוכל להשתמש ב-useAuth
-// (hooks חייבים להיות בתוך Provider)
-// ─────────────────────────────────────────────
-function AppRoutes() {
+  return isLoggedIn ? children : <Navigate replace to="/login" />;
+};
+
+function AppContent() {
+  const { isLoggedIn } = useAuth();
+
   return (
-    <>
-      <Navbar />
-      <Routes>
-        {/* דף כניסה — פתוח לכולם */}
-        <Route path="/login" element={<LoginPage />} />
- 
-        {/* דפים מוגנים — דורשים התחברות */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <DeliveryPersonsPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/packages"
-          element={
-            <ProtectedRoute>
-              <PackagesPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/recipients"
-          element={
-            <ProtectedRoute>
-              <RecipientsPage />
-            </ProtectedRoute>
-          }
-        />
- 
-        {/* כל URL לא מוכר → דף הבית */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {isLoggedIn && <Navbar />}
+      
+      <Box component="main" sx={{ flexGrow: 1 }}>
+        <Routes>
+          <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
+          
+          {/* כאן התיקון: נתיב הבית מציג את השליחים לפי הנאבבר שלך */}
+          <Route path="/" element={<PrivateRoute><DeliveryPersonsPage /></PrivateRoute>} />
+          
+          <Route path="/packages" element={<PrivateRoute><PackagesPage /></PrivateRoute>} />
+          <Route path="/recipients" element={<PrivateRoute><RecipientsPage /></PrivateRoute>} />
+          
+          {/* אם הוקלד נתיב לא קיים, חזרה לשליחים (דף הבית) */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 }
- 
+
 export default function App() {
   return (
-    // AuthProvider חייב לעטוף את BrowserRouter
-    // כדי שה-useAuth יעבוד גם בתוך Routes
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }

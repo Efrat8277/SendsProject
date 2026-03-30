@@ -71,28 +71,43 @@ namespace SendsProject.Controllers
 
         // PUT api/<RecipientController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] Recipient value)
+        public async Task<ActionResult> Put(int id, [FromBody] RecipientDTO value)
         {
             var index = await _recipientService.GetRecipientByIdAsync(id);
             if (index == null)
             {
                 return Conflict();
             }
-            await _recipientService.PutRecipientAsync(value);
+            var recipient = _mapper.Map<Recipient>(value);
+            await _recipientService.PutRecipientAsync(recipient);
             return Ok();
-        }
+        }   
 
         // DELETE api/<RecipientController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var recipient =await _recipientService.GetRecipientByIdAsync(id);
+            var recipient = await _recipientService.GetRecipientByIdAsync(id);
             if (recipient == null)
             {
-                return Conflict();
+                return NotFound(new { message = "הנמען לא נמצא במערכת" });
             }
-           await _recipientService.DeleteRecipientAsync(id);
-            return Ok(recipient);
+
+            try
+            {
+                await _recipientService.DeleteRecipientAsync(id);
+
+                return Ok(recipient);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // 5. הגנה מפני שגיאות לא צ פויות אחרות
+                return StatusCode(500, new { message = "שגיאה פנימית בשרת במחיקת הנמען" });
+            }
         }
     }
 }

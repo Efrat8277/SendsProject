@@ -12,64 +12,70 @@
  * ב-<AuthProvider> ואז כל component יכול לקרוא את המידע
  * עם useContext(AuthContext).
  */
-import { createContext,useContext,useState } from "react";
-import {jwtDecode} from "jwt-decode"
+import { createContext, useState, useContext, useEffect } from "react";
+import { jwtDecode } from "jwt-decode"; // יבוא הספרייה שהתקנו
 
+const AuthContext = createContext();
 
-// 1. יוצרים את ה"קופסה" שתחזיק את המידע
-const AuthContext = createContext(null)
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(null);
 
-// ─────────────────────────────────────────────
-// AuthProvider — עוטף את כל האפליקציה ב-App.jsx
-// ─────────────────────────────────────────────
+  // פונקציה שמחלצת את נתוני המשתמש מהטוקן
+ const getUserFromToken = (t) => {
+  try {
+    const decoded = jwtDecode(t);
+    console.log("פענוח מלא של הטוקן:", decoded);
 
-export function AuthProvider({children}){
-    const [token, setToken] = useState(localStorage.getItem("token"));
+    // אסטרטגיה חסינה: מחפשים מפתח שמכיל את המילה 'name' בסופו
+    const nameKey = Object.keys(decoded).find(key => key.endsWith('/name')) || "unique_name";
+    const roleKey = Object.keys(decoded).find(key => key.endsWith('/role')) || "role";
 
-    /**
-   * נקרא מדף ה-Login אחרי שהשרת מחזיר טוקן.
-   * שומר את הטוקן ב-state וגם ב-localStorage
-   * (כדי שישרוד רענון דף).
-   */
+    const name = decoded[nameKey];
+    const role = decoded[roleKey];
 
-    function login(newToken){
-        localStorage.setItem("token",newToken);
-        setToken(newToken);
-    }
+    console.log("השם שנמצא במפתח", nameKey, ":", name);
 
-      /** מנקה הכל ומחזיר לדף ה-Login */
-
-      function logout(){
-        localStorage.removeItem("token");
-        setToken(null);
-      }
-
-       /**
-   * מפענח את הטוקן כדי לשלוף פרטי משתמש.
-   * הטוקן JWT מכיל בתוכו claims — בשרת שלך:
-   *   ClaimTypes.Name  → שם המשתמש
-   *   ClaimTypes.Role  → recipient / delivary_person
-   */
-  const user = token ? jwtDecode(token): null;
-
-    // מה שיהיה זמין לכל component שיקרא useAuth()
-    const value = {
-    token,
-    user,
-    isLoggedIn: !!token,
-    role: user?.role || user?.Role||null,
-    login,
-    logout,
+    return { 
+      name: name || "משתמש", 
+      role: role 
+    };
+  } catch (error) {
+    console.error("שגיאה בפענוח:", error);
+    return null;
+  }
 };
 
-return <AuthContext.Provider value = {value}>{children}</AuthContext.Provider>
-}
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+      setUser(getUserFromToken(token));
+    } else {
+      localStorage.removeItem("token");
+      setUser(null);
+    }
+  }, [token]);
 
-// ─────────────────────────────────────────────
-// useAuth — ה-hook שכל דף ישתמש בו
-// שימוש: const { user, logout, isLoggedIn } = useAuth();
-// ─────────────────────────────────────────────
+  const login = (newToken) => {
+    setToken(newToken);
+  };
 
-export function useAuth(){
-    return useContext(AuthContext)
-}
+  const logout = () => {
+    setToken(null);
+    localStorage.removeItem("token");
+  };
+
+  return (
+    <AuthContext.Provider value={{ 
+        token, 
+        user, 
+        login, 
+        logout, 
+        isLoggedIn: !!token 
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);

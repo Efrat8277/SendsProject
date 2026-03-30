@@ -1,34 +1,139 @@
+/*navbar.css*/
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.nav-logo {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    padding-left: 70px;
+    background: #fff;
+    z-index: 1001;
+    overflow: visible;
+    border-bottom: 2px solid #1D9E75;
+}
+
+.nav-logo svg {
+    overflow: visible;
+}
+
 .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: #fff;
+    border-bottom: 2px solid #1D9E75;
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-    padding: 0.75rem 2rem;
-    background-color: #1677ff;
-    color: #fff;
-  }
-  .links {
+    padding: 0 2rem;
+    padding-right: 230px; /* מפנה מקום ללוגו */
+    padding-left: 0;
+    height: 60px;
+    z-index: 1000;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.links {
     display: flex;
-    gap: 1.5rem;
-  }
-  .link{
-    color: #fff;
+    flex-direction: row;
+    flex: 1;
+    gap: 4px;
+}
+
+.link {
+    position: relative;
+    color: #888;
     text-decoration: none;
-    font-size: 15px;
-  }
-  .userSection {
+    padding: 0 18px;
+    height: 60px;
+    font-size: 14px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 1rem;
-  }
-  .userName {
-    font-size: 14px;
-  }
-  .logoutBtn{
-    padding: 5px 12px;
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #fff;
-    border-radius: 4px;
-    cursor: pointer;
+    gap: 8px;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+.link:hover:not(.active) {
+    color: #001529;
+}
+
+.link.active {
+    color: #001529;
+    font-weight: 600;
+}
+
+.link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #1D9E75;
+    border-radius: 3px 3px 0 0;
+}
+
+.nav-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 20px;
+}
+
+.userSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-right: 24px;
+    margin-left: 100px;
+}
+
+.userName {
+    background: #E1F5EE;
+    color: #0F6E56;
     font-size: 13px;
-  }
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.logoutBtn {
+    padding: 6px 14px;
+    background: transparent;
+    color: #001529;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+    background: #f1f5f9;
+}
+
+.page {
+    padding-top: 80px;
+    max-width: 100%;
+    margin: 0;
+    padding-inline: 2rem;
+    direction: rtl;
+    box-sizing: border-box;
+}

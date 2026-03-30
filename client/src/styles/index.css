@@ -1,0 +1,91 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* פלטת צבעים מודרנית - SwiftDrop */
+  --primary: #1D9E75;        /* ירוק ראשי */
+  --primary-dark: #0F6E56;   /* ירוק כהה להובר */
+  --primary-light: #E1F5EE;  /* ירוק בהיר מאוד לרקעים/באדג'ים */
+  
+  --bg-page: #F4F7F6;       /* רקע דף מעט אפרפר-כחלחל נקי */
+  --bg-card: #ffffff;
+  
+  --text-main: #2D3748;      /* אפור כהה מאוד לקריאות מקסימלית */
+  --text-secondary: #718096; /* אפור בינוני לטקסט משני */
+  --text-on-primary: #ffffff;
+  
+  --border-color: #E2E8F0;   /* גבולות עדינים מאוד */
+  --error: #E53E3E;          /* אדום שגיאה מודרני */
+  --error-bg: #FFF5F5;
+  
+  --success: #38A169;
+  --pending: #DD6B20;
+  
+  /* טיפוגרפיה וריווח */
+  --font-family: 'Heebo', system-ui, -apple-system, sans-serif;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family) !important; /* אכיפת הפונט על הכל */
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  direction: rtl; /* RTL גלובלי */
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* הגדרות בסיסיות לאלמנטים HTML */
+h1, h2, h3, h4 {
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-family);
+}
+
+input, select, textarea {
+  font-family: var(--font-family);
+  direction: rtl;
+}
+
+/* מחלקות עזר לאנימציות כניסה */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
