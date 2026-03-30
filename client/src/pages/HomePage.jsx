@@ -1,10 +1,23 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate,useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { FiTruck, FiShield, FiClock, FiArrowLeft } from "react-icons/fi";
 import "../styles/HomePage.css";
 
 export default function HomePage() {
+    const { logout, isLoggedIn } = useAuth();
+    const location = useLocation();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // בודק אם הגענו לדף הבית עם בקשת התנתקות
+        const params = new URLSearchParams(location.search);
+        if (params.get("action") === "logout" && isLoggedIn) {
+            logout();
+            // מנקה את הכתובת כדי שלא יתנתק שוב בריענון
+            navigate("/", { replace: true });
+        }
+    }, [location, logout, isLoggedIn, navigate]);
     return (
         <div className="home-container">
             {/* Hero Section - החלק העליון המרשים */}

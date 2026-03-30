@@ -61,14 +61,56 @@ export const authApi = {
 export const deliveryPersonApi = {
   getAll: () => request("/deliveryperson"),
   // ... שאר הפונקציות שלך
+  getById: (id) => request(`/deliveryperson/${id}`),
+  create: (deliveryPerson) =>
+    request("/deliveryperson", {
+      method: "POST",
+      body: JSON.stringify(deliveryPerson),
+    }),
+  update: (id, deliveryPerson) =>
+    request(`/deliveryperson/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(deliveryPerson),
+    }),
+  delete: (id) =>
+    request(`/deliveryperson/${id}`, { method: "DELETE" }),
+
 };
 
 export const packageApi = {
   getAll: () => request("/package"),
   // ... שאר הפונקציות שלך
+  getById: (id) => request(`/package/${id}`),
+  create: (pkg) =>
+    request("/package", {
+      method: "POST",
+      body: JSON.stringify(pkg),
+    }),
+  update: (id, pkg) =>
+    request(`/package/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(pkg),
+    }),
+  delete: (id) =>
+    request(`/package/${id}`, { method: "DELETE" }),
+
 };
 
 export const recipientApi = {
   getAll: () => request("/recipient"),
   // ... שאר הפונקציות שלך
+   getById: (id) => request(`/recipient/${id}`),
+  create: (recipient) =>
+    request("/recipient", {
+      method: "POST",
+      body: JSON.stringify(recipient),
+    }),
+  update: (id, recipient) =>
+    request(`/recipient/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ ...recipient, RecipientId: id }),
+    }),
+  delete: (id) =>
+    request(`/recipient/${id}`, { method: "DELETE" }),
+
 };

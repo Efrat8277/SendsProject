@@ -11,8 +11,7 @@ export default function Navbar() {
     if (!isLoggedIn) return null;
 
     const handleLogout = () => {
-        logout();
-        navigate("/login");
+       navigate("/?action=logout", { replace: true });
     };
 
     const isActive = (path) => location.pathname === path ? "active" : "";
