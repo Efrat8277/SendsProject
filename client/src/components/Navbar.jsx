@@ -33,7 +33,7 @@ export default function Navbar() {
         <nav className="nav" dir="rtl">
             <div className="nav-sep"></div>
             <div className="links">
-                <Link className={`link ${isActive("/")}`} to="/">
+                <Link className={`link ${isActive("/dashboard")}`} to="/dashboard">
                     <FiTruck color="#1D9E75" size={17} /> שליחים
                 </Link>
                 <Link className={`link ${isActive("/packages")}`} to="/packages">

@@ -130,7 +130,7 @@ export default function RecipientsPage() {
                                     {/* 5. כפתור עריכה במקום מחיקה */}
                                     <button
                                         className="btn btn-primary"
-                                        style={{ backgroundColor: '#1677ff' }}
+                                        style={{ backgroundColor: '#0b7e56' }}
                                         onClick={() => handleEditClick(recipient)}
                                     >
                                         עריכה

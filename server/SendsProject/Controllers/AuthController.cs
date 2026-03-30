@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SendsProject.Core.Models.Classes;
 using SendsProject.Core.Services;
 using SendsProject.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -45,6 +46,24 @@ namespace SendsProject.Controllers
                 return Ok(new { Token = tokenString });
             }
             return Unauthorized();
+        }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] User userModel)
+        {
+            // בדיקה בסיסית אם המשתמש כבר קיים (מומלץ)
+            var existingUser = await _userService.GetByUserNameAsync(userModel.UserName, userModel.Password);
+            if (existingUser != null)
+            {
+                return BadRequest(new { message = "שם המשתמש כבר תפוס" });
+            }
+
+            // הוספת המשתמש דרך הסרביס
+            // הערה: וודאי שב-IUserService יש מתודת Add או Create
+            var newUser = await _userService.AddUserAsync(userModel);
+
+            if (newUser == null) return BadRequest();
+
+            return Ok(new { message = "ההרשמה בוצעה בהצלחה" });
         }
 
     }

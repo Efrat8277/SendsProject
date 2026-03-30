@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage'; // אל תשכחי לייבא את דף ההרשמה
+import HomePage from './pages/HomePage';       // אל תשכחי לייבא את דף הבית החדש
 import DeliveryPersonsPage from './pages/DeliveryPersonsPage';
 import PackagesPage from './pages/PackagesPage';
 import RecipientsPage from './pages/RecipientsPage';
@@ -26,19 +28,25 @@ function AppContent() {
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* ה-Navbar יופיע רק אם המשתמש מחובר */}
       {isLoggedIn && <Navbar />}
       
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Routes>
-          <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/" />} />
+          {/* דף הבית הכללי - נגיש לכולם */}
+          <Route path="/" element={<HomePage />} />
           
-          {/* כאן התיקון: נתיב הבית מציג את השליחים לפי הנאבבר שלך */}
-          <Route path="/" element={<PrivateRoute><DeliveryPersonsPage /></PrivateRoute>} />
+          {/* דפי כניסה והרשמה - רק אם לא מחוברים */}
+          <Route path="/login" element={!isLoggedIn ? <LoginPage /> : <Navigate to="/dashboard" />} />
+          <Route path="/register" element={!isLoggedIn ? <RegisterPage /> : <Navigate to="/dashboard" />} />
           
+          {/* דפי ניהול - מוגנים ב-PrivateRoute */}
+          {/* שיניתי את הנתיב של השליחים ל-dashboard כדי שלא יתנגש עם דף הבית */}
+          <Route path="/dashboard" element={<PrivateRoute><DeliveryPersonsPage /></PrivateRoute>} />
           <Route path="/packages" element={<PrivateRoute><PackagesPage /></PrivateRoute>} />
           <Route path="/recipients" element={<PrivateRoute><RecipientsPage /></PrivateRoute>} />
           
-          {/* אם הוקלד נתיב לא קיים, חזרה לשליחים (דף הבית) */}
+          {/* הפניה לנתיב ברירת מחדל אם הכתובת לא קיימת */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Box>
